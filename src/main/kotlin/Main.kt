@@ -56,11 +56,14 @@ fun main() = application {
     ) {
 
         MaterialTheme {
-            Row {
+            Row(
+                modifier = Modifier
+                    .background(Constants.windowColor)
+                    .padding(Constants.mainPadding)
+            ) {
                 // Основное место калькулятора
                 Column(
                     modifier = Modifier
-                        .background(Constants.windowColor)
                         .padding(Constants.mainPadding)
                         .width(Constants.calcWidth)
                 ) {
@@ -107,8 +110,10 @@ fun main() = application {
 
                 // Журнал действий
                 Column(
-                    modifier = Modifier.width(Constants.historyWidth).height(Constants.windowSize.height)
-                        .background(Constants.windowColor).padding(7.dp),
+                    modifier = Modifier
+                        .width(Constants.historyWidth)
+                        .height(Constants.windowSize.height)
+                        .padding(7.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
@@ -137,6 +142,36 @@ fun main() = application {
                             }
                         }
                     }
+                }
+
+                Column(
+                    modifier = Modifier.width(Constants.aboutWidth)
+                        .height(Constants.windowSize.height)
+                        .padding(7.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        "О приложении",
+                        fontSize = 20.sp,
+                        color = Constants.textColor
+                    )
+
+                    Text(
+                        "Это приложение-калькулятор написал Деревяновский К.В. студент группы 4ИС для предмета " +
+                                "\"Стандартизация и унификация информационных технологий\". " +
+                                "В калькуляторе поддерживаются основные математические функции и операции." +
+                                "Вычисление результата происходит по мере ввода и в порядке выполнения математических операций. " +
+                                "У каждого действия определены правила по которым они могут быть внесены в выражение, " +
+                                "поэтому не допустимые не вносятся и не как не отображаются на экране. " +
+                                "Например 3 + 5 - допустимое, а 3 + ^ 6 - не допустимое и такое выражение не возможно внести. " +
+                                "По умолчанию угол в тригонометрических функциях считается в градусах, при " +
+                                "использовании числа пи - в радианах." +
+                                "Кнопка \"=\" запоминает результат в журнал. " +
+                                "Большинство операций поддерживают горячие клавиши.",
+                        fontSize = 14.sp,
+                        color = Constants.textColor,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
                 }
             }
         }

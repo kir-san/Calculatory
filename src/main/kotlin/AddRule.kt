@@ -1,64 +1,49 @@
 // Правила добавления элементов
 
-interface AddRule
-interface AddRuleAfter
-
-sealed interface AddRuleItem
-
-val AddRuleItem.getValue: Int
-    get() = when (this) {
-        is Dot -> 1
-        is First -> 2
-        is ModArc -> 3
-        is Number -> 4
-        is Root -> 5
-        is Tri -> 6
-        is Const -> 7
-        is BaseMath -> 8
-        is RightParenthesis -> 9
-    }
-
 // может быть первым
-interface AddRuleAfterFirst : AddRuleAfter, First
-interface AddRuleFirst : AddRule, First
-interface First : AddRuleItem
-
+const val first = 1
 //  после  .
-interface AddRuleAfterDot : AddRuleAfter, Dot
-interface AddRuleDot : AddRule, Dot
-interface Dot : AddRuleItem
-
+const val dot = 2
 // после цифр
-interface AddRuleAfterNumber : AddRuleAfter, Number
-interface AddRuleNumber : AddRule, Number
-interface Number : AddRuleItem
-
+const val number = 3
 //  после тригонометрии
-interface AddRuleAfterTri : AddRuleAfter, Tri
-interface AddRuleTri : AddRule, Tri
-interface Tri : AddRuleItem
-
+const val tri = 4
 // после Арк
-interface AddRuleAfterModArc : AddRuleAfter, ModArc
-interface AddRuleModArc : AddRule, ModArc
-interface ModArc : AddRuleItem
-
+const val arc = 5
 // После корня
-interface AddRuleAfterRoot : AddRuleAfter, Root
-interface AddRuleRoot : AddRule, Root
-interface Root : AddRuleItem
-
+const val root = 6
 // После констант
-interface AddRuleAfterConst : AddRuleAfter, Const
-interface AddRuleConst : AddRule, Const
-interface Const : AddRuleItem
-
+const val constant = 7
 // После основных базовых операций
-interface AddRuleAfterBaseMath : AddRuleAfter, BaseMath
-interface AddRuleBaseMath : AddRule, BaseMath
-interface BaseMath : AddRuleItem
-
+const val baseMath = 8
 // После основных базовых операций
-interface AddRuleAfterRightParenthesis : AddRuleAfter, RightParenthesis
-interface AddRuleRightParenthesis : AddRule, RightParenthesis
-interface RightParenthesis : AddRuleItem
+const val rightParenthesis = 9
+
+
+interface NumberWithRules : CalcNumber {
+    override val ruleItems: Set<Int>
+        get() = setOf(number)
+    override val rulesAfter: Set<Int>
+        get() = setOf(first, dot, tri, baseMath, root, number)
+}
+
+interface ConstNumberWithRules : CalcNumber {
+    override val ruleItems: Set<Int>
+        get() = setOf(constant)
+    override val rulesAfter: Set<Int>
+        get() = setOf(first, tri, baseMath, root)
+}
+
+interface BaseMathWithRules : CalcMathWith2PSimple {
+    override val ruleItems: Set<Int>
+        get() = setOf(baseMath)
+    override val rulesAfter: Set<Int>
+        get() = setOf(number, constant, rightParenthesis)
+}
+
+interface TrigonometryWithRules : CalcMathWith1PAfter {
+    override val ruleItems: Set<Int>
+        get() = setOf(tri)
+    override val rulesAfter: Set<Int>
+        get() = setOf(first, baseMath, arc)
+}

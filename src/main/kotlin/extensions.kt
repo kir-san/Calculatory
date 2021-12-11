@@ -21,7 +21,7 @@ fun KeyEvent.onPressKey(action: (CalcAction) -> Unit): Boolean {
 fun MutableList<CalcAction>.addAction(action: CalcAction) {
     when {
         // первым элементом может быть лишь ограниченное кол-во действий
-        isEmpty() -> if (action is AddRuleAfterFirst) add(action)
+        isEmpty() -> if (action.rulesAfter.contains(first)) add(action)
         // Удаление последнего элемента
         action is Extra.RemoveLast -> removeLast()
         // Очистка поля
@@ -38,7 +38,7 @@ fun MutableList<CalcAction>.addAction(action: CalcAction) {
         }
 
         // действия с модификатором Арк
-        last() is AddRuleModArc && action is AddRuleAfterModArc -> {
+        last().ruleItems.contains(arc) && action.rulesAfter.contains(arc) -> {
             removeLast()
             when (action) {
                 is Math.Cos -> add(Math.ArcCos)
@@ -49,18 +49,7 @@ fun MutableList<CalcAction>.addAction(action: CalcAction) {
         }
 
         // Добавление по правилам
-        last() is AddRule && action is AddRuleAfter -> {
-            val last = last()
-//            if ((last is AddRuleItem && action is AddRuleItem) &&
-//                last.getValue == action.getValue
-//            ) {
-//                add(action)
-//            }
-            if (last is AddRuleItem && action is AddRuleItem) {
-                println("last is ${last.getValue}")
-                println("action is ${action.getValue}")
-            }
-        }
+        last().ruleItems.intersect(action.rulesAfter).isNotEmpty() -> add(action)
     }
 }
 
@@ -83,10 +72,13 @@ fun List<CalcAction>.transformNumbers(): List<CalcAction> {
         when (action) {
             // Добавление чисел во временную строку
             is CalcNumber -> {
-                if (action is AddRuleNumber) {
+                if (action.ruleItems.contains(number)) {
                     newNumber += action.expressionText
                     // индикатор того были ли добавлены нули после точки
                     isLastZero = action is Numbers.ZERO && isDecimal
+                }
+                if (action.ruleItems.contains(constant)) {
+                    newList += action
                 }
             }
             is Extra.Decimal -> {

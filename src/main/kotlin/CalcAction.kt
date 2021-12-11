@@ -11,6 +11,10 @@ sealed interface CalcAction {
         get() = Key.Unknown
     val key2: Key
         get() = Key.Unknown
+    val ruleItems: Set<Int>
+        get() = setOf()
+    val rulesAfter: Set<Int>
+        get() = setOf()
 }
 
 interface CalcError // Индикатор ошибки
@@ -51,8 +55,3 @@ interface CalcMathWith1P : CalcMath {
 
 interface CalcMathWith1PBefore : CalcMathWith1P
 interface CalcMathWith1PAfter : CalcMathWith1P
-
-
-
-
-

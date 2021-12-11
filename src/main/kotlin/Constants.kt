@@ -11,6 +11,7 @@ object Constants {
     val buttonWidth = 80.dp
 
     val historyWidth = 250.dp
+    val aboutWidth = 390.dp
 
     val buttonPadding = 1.dp
     val mainPadding = 3.dp
@@ -42,95 +43,85 @@ object Constants {
     )
     const val buttonCols = 6
     private const val buttonRows = 5
-    private val textSize = 101.dp + bigTextVertPad * 2 + smallTextVerPad * 2
+    private val textSize = 108.dp + bigTextVertPad * 2 + smallTextVerPad * 2
 
-    val calcWidth = buttonWidth * buttonCols + buttonPadding * (buttonCols - 1) + mainPadding * 2
-    private val width = calcWidth + historyWidth
-    private val height = buttonHeight * buttonRows + buttonPadding * (buttonRows - 1) + textSize + mainPadding * 2
+    val calcWidth = buttonWidth * buttonCols + buttonPadding * (buttonCols - 1) + mainPadding * 4
+    private val width = calcWidth + historyWidth + aboutWidth
+    private val height = buttonHeight * buttonRows + buttonPadding * (buttonRows - 1) + textSize + mainPadding * 4
 
     val windowSize = DpSize(width = width, height = height)
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 object Numbers {
-    object ZERO : CalcNumber, AddRuleAfterFirst, AddRuleNumber, AddRuleAfterDot, AddRuleAfterTri, AddRuleAfterBaseMath,
-        AddRuleAfterRoot {
+    object ZERO : NumberWithRules {
         override val value = 0F
         override val key = Key.Zero
         override val key2 = Key.NumPad0
     }
 
-    object ONE : CalcNumber, AddRuleAfterFirst, AddRuleNumber, AddRuleAfterDot, AddRuleAfterTri, AddRuleAfterBaseMath,
-        AddRuleAfterRoot {
+    object ONE : NumberWithRules {
         override val value = 1F
         override val key = Key.One
         override val key2 = Key.NumPad1
     }
 
-    object TWO : CalcNumber, AddRuleAfterFirst, AddRuleNumber, AddRuleAfterDot, AddRuleAfterTri, AddRuleAfterBaseMath,
-        AddRuleAfterRoot {
+    object TWO : NumberWithRules {
         override val value = 2F
         override val key = Key.Two
         override val key2 = Key.NumPad2
     }
 
-    object THREE : CalcNumber, AddRuleAfterFirst, AddRuleNumber, AddRuleAfterDot, AddRuleAfterTri, AddRuleAfterBaseMath,
-        AddRuleAfterRoot {
+    object THREE : NumberWithRules {
         override val value = 3F
         override val key = Key.Three
         override val key2 = Key.NumPad3
     }
 
-    object FOUR : CalcNumber, AddRuleAfterFirst, AddRuleNumber, AddRuleAfterDot, AddRuleAfterTri, AddRuleAfterBaseMath,
-        AddRuleAfterRoot {
+    object FOUR : NumberWithRules {
         override val value = 4F
         override val key = Key.Four
         override val key2 = Key.NumPad4
     }
 
-    object FIVE : CalcNumber, AddRuleAfterFirst, AddRuleNumber, AddRuleAfterDot, AddRuleAfterTri, AddRuleAfterBaseMath,
-        AddRuleAfterRoot {
+    object FIVE : NumberWithRules {
         override val value = 5F
         override val key = Key.Five
         override val key2 = Key.NumPad5
     }
 
-    object SIX : CalcNumber, AddRuleAfterFirst, AddRuleNumber, AddRuleAfterDot, AddRuleAfterTri, AddRuleAfterBaseMath,
-        AddRuleAfterRoot {
+    object SIX : NumberWithRules {
         override val value = 6F
         override val key = Key.Six
         override val key2 = Key.NumPad6
     }
 
-    object SEVEN : CalcNumber, AddRuleAfterFirst, AddRuleNumber, AddRuleAfterDot, AddRuleAfterTri, AddRuleAfterBaseMath,
-        AddRuleAfterRoot {
+    object SEVEN : NumberWithRules {
         override val value = 7F
         override val key = Key.Seven
         override val key2 = Key.NumPad7
     }
 
-    object EIGHT : CalcNumber, AddRuleAfterFirst, AddRuleNumber, AddRuleAfterDot, AddRuleAfterTri, AddRuleAfterBaseMath,
-        AddRuleAfterRoot {
+    object EIGHT : NumberWithRules {
         override val value = 8F
         override val key = Key.Eight
         override val key2 = Key.NumPad8
     }
 
-    object NINE : CalcNumber, AddRuleAfterFirst, AddRuleNumber, AddRuleAfterDot, AddRuleAfterTri, AddRuleAfterBaseMath,
-        AddRuleAfterRoot {
+    object NINE : NumberWithRules {
         override val value = 9F
         override val key = Key.Nine
         override val key2 = Key.NumPad9
     }
 
-    object PI : CalcNumber, AddRuleAfterFirst, AddRuleAfterTri, AddRuleAfterBaseMath, AddRuleAfterRoot, AddRuleConst {
+    object PI : ConstNumberWithRules {
         override val value = kotlin.math.PI.toFloat()
         override val buttonText = "Pi"
         override val expressionText = "Pi"
         override val hasPi = true
     }
 
-    object E : CalcNumber, AddRuleAfterFirst, AddRuleAfterTri, AddRuleAfterBaseMath, AddRuleAfterRoot, AddRuleConst {
+    object E : ConstNumberWithRules {
         override val value = kotlin.math.E.toFloat()
         override val buttonText = "E"
         override val expressionText = "E"
@@ -140,8 +131,7 @@ object Numbers {
 
 @OptIn(ExperimentalComposeUiApi::class)
 object Math {
-    object Div : CalcMathWith2PSimple, AddRuleAfterNumber, AddRuleAfterConst, AddRuleBaseMath,
-        AddRuleAfterRightParenthesis {
+    object Div : BaseMathWithRules {
         override val buttonText = "/"
         override val expressionText = " $buttonText "
         override val key = Key.Slash
@@ -159,8 +149,7 @@ object Math {
         }
     }
 
-    object Plus : CalcMathWith2PSimple, AddRuleAfterNumber, AddRuleAfterConst, AddRuleBaseMath,
-        AddRuleAfterRightParenthesis {
+    object Plus : BaseMathWithRules {
         override val buttonText = "+"
         override val expressionText = " $buttonText "
         override val key = Key.Plus
@@ -173,13 +162,17 @@ object Math {
         }
     }
 
-    object Minus : CalcMathWith2PSimple, AddRuleAfterFirst, AddRuleAfterNumber,
-        AddRuleAfterRoot, AddRuleAfterConst, AddRuleBaseMath, AddRuleAfterRightParenthesis {
+    object Minus : CalcMathWith2PSimple {
         override val buttonText = "-"
         override val expressionText = " $buttonText "
         override val key = Key.Minus
         override val key2 = Key.NumPadSubtract
         override val order = 1
+
+        override val ruleItems: Set<Int>
+            get() = setOf(baseMath)
+        override val rulesAfter: Set<Int>
+            get() = setOf(first, number, root, constant, rightParenthesis, tri)
 
         override fun calculate(number1: CalcNumber, number2: CalcNumber): CalcNumber {
             val hasPi = number1.hasPi || number2.hasPi
@@ -187,8 +180,7 @@ object Math {
         }
     }
 
-    object Times : CalcMathWith2PSimple, AddRuleAfterNumber, AddRuleAfterConst, AddRuleBaseMath,
-        AddRuleAfterRightParenthesis {
+    object Times : BaseMathWithRules {
         override val buttonText = "x"
         override val expressionText = " $buttonText "
         override val key = Key.Multiply
@@ -201,8 +193,7 @@ object Math {
         }
     }
 
-    object Pow : CalcMathWith2PAdvance, AddRuleAfterNumber, AddRuleAfterConst, AddRuleBaseMath,
-        AddRuleAfterRightParenthesis {
+    object Pow : BaseMathWithRules {
         override val buttonText = "x^y"
         override val expressionText = "^"
         override val key = Key.P
@@ -214,11 +205,16 @@ object Math {
         }
     }
 
-    object Root : CalcMathWith2PAdvance, AddRuleAfterNumber, AddRuleRoot, AddRuleAfterConst {
+    object Root : CalcMathWith2PAdvance {
         override val buttonText = "y√x"
         override val expressionText = "√"
         override val key = Key.R
         override val order = 3
+
+        override val ruleItems: Set<Int>
+            get() = setOf(root)
+        override val rulesAfter: Set<Int>
+            get() = setOf(number, constant)
 
         override fun calculate(number1: CalcNumber, number2: CalcNumber): CalcNumber {
             if (number2.value < 0F) {
@@ -235,58 +231,87 @@ object Math {
         }
     }
 
-    object Sqrt : CalcMathWith1PAfter, AddRuleAfterFirst, AddRuleAfterNumber, AddRuleRoot, AddRuleAfterBaseMath {
+    object Sqrt : CalcMathWith1PAfter {
         override val buttonText = "√x"
         override val expressionText = "√"
         override val key = Key.S
         override val order = 4
+
+        override val ruleItems: Set<Int>
+            get() = setOf(root)
+        override val rulesAfter: Set<Int>
+            get() = setOf(first, number, baseMath)
 
         override fun calculate(number: CalcNumber): CalcNumber {
             return Root.calculate(Numbers.TWO, number)
         }
     }
 
-    object Cos : CalcMathWith1PAfter, AddRuleTri, AddRuleAfterBaseMath, AddRuleAfterModArc, AddRuleAfterRoot {
+    object Cos : TrigonometryWithRules {
         override val buttonText = "cos"
         override val expressionText = buttonText
         override val order = 4
 
         override fun calculate(number: CalcNumber): CalcNumber {
             if (number.hasPi) {
+                if (number.value == PI.toFloat() / 2)
+                    return Numbers.ZERO
                 return number.getResult(false) { n1, _ -> cos(n1) }
             }
+
+            val odd = (number.value / 90) % 2
+            if (odd == 1f) {
+                return Numbers.ZERO
+            }
+
             return number.getResult(false) { n1, _ ->
                 cos(n1 * PI.toFloat() / 180f)
             }
         }
     }
 
-    object Sin : CalcMathWith1PAfter, AddRuleTri, AddRuleAfterBaseMath, AddRuleAfterModArc, AddRuleAfterRoot {
+    object Sin : TrigonometryWithRules {
         override val buttonText = "sin"
         override val expressionText = buttonText
         override val order = 4
 
         override fun calculate(number: CalcNumber): CalcNumber {
             if (number.hasPi) {
+                if (number.value == PI.toFloat())
+                    return Numbers.ZERO
                 return number.getResult(false) { n1, _ -> sin(n1) }
             }
+
+            val odd = (number.value / 180)
+            if (odd == odd.toLong().toFloat()) {
+                return Numbers.ZERO
+            }
+
             return number.getResult(false) { n1, _ ->
                 sin(n1 * PI.toFloat() / 180f)
             }
         }
     }
 
-    object Tan : CalcMathWith1PAfter, AddRuleTri, AddRuleAfterBaseMath, AddRuleAfterModArc, AddRuleAfterRoot {
+    object Tan : TrigonometryWithRules {
         override val buttonText = "tan"
         override val expressionText = buttonText
         override val order = 4
 
         override fun calculate(number: CalcNumber): CalcNumber {
             if (number.hasPi) {
+                if (number.value == PI.toFloat())
+                    return Numbers.ZERO
+
+                val odd = number.value % (PI.toFloat() / 2)
+                if (odd == 0f) {
+                    return Errors.WrongTan
+                }
+
                 return number.getResult(false) { n1, _ -> tan(n1) }
             }
 
-            val odd = (number.value.toFloat() / 90) % 2
+            val odd = (number.value / 90) % 2
             if (odd == 1f) {
                 return Errors.WrongTan
             }
@@ -296,33 +321,49 @@ object Math {
         }
     }
 
-    object Ctg : CalcMathWith1PAfter, AddRuleTri, AddRuleAfterBaseMath, AddRuleAfterModArc, AddRuleAfterRoot {
+    object Ctg : TrigonometryWithRules {
         override val buttonText = "ctg"
         override val expressionText = buttonText
         override val order = 4
 
         override fun calculate(number: CalcNumber): CalcNumber {
             if (number.hasPi) {
+                var odd = (number.value / PI.toFloat())
+                if (odd == odd.toLong().toFloat()) {
+                    return Errors.WrongTan
+                }
+
+                odd = number.value % (PI.toFloat() / 2)
+                if (odd == 0f) {
+                    return Numbers.ZERO
+                }
+
                 return number.getResult(false) { n1, _ -> tan(n1) }
             }
 
-            val odd = (number.value.toFloat() / 180)
+            var odd = (number.value / 180)
             if (odd == odd.toLong().toFloat()) {
                 return Errors.WrongTan
             }
+
+            odd = (number.value / 90) % 2
+            if (odd == 1f) {
+                return Numbers.ZERO
+            }
+
             return number.getResult(false) { n1, _ ->
                 1f / tan(n1 * PI.toFloat() / 180f)
             }
         }
     }
 
-    object ArcCos : CalcMathWith1PAfter, AddRuleTri, AddRuleAfterBaseMath, AddRuleAfterModArc, AddRuleAfterRoot {
+    object ArcCos : TrigonometryWithRules {
         override val buttonText = "arccos"
         override val expressionText = buttonText
         override val order = 4
 
         override fun calculate(number: CalcNumber): CalcNumber {
-            if (number.value.toFloat() !in -1f..1f)
+            if (number.value !in -1f..1f)
                 return Errors.BigNumber
 
             return number.getResult(false) { n1, _ ->
@@ -331,13 +372,13 @@ object Math {
         }
     }
 
-    object ArcSin : CalcMathWith1PAfter, AddRuleTri, AddRuleAfterBaseMath, AddRuleAfterModArc, AddRuleAfterRoot {
+    object ArcSin : TrigonometryWithRules {
         override val buttonText = "arcsin"
         override val expressionText = buttonText
         override val order = 4
 
         override fun calculate(number: CalcNumber): CalcNumber {
-            if (number.value.toFloat() !in -1f..1f)
+            if (number.value !in -1f..1f)
                 return Errors.BigNumber
 
             return number.getResult(false) { n1, _ ->
@@ -346,7 +387,7 @@ object Math {
         }
     }
 
-    object ArcTan : CalcMathWith1PAfter, AddRuleTri, AddRuleAfterBaseMath, AddRuleAfterModArc, AddRuleAfterRoot {
+    object ArcTan : TrigonometryWithRules {
         override val buttonText = "arctan"
         override val expressionText = buttonText
         override val order = 4
@@ -358,7 +399,7 @@ object Math {
         }
     }
 
-    object ArcCtg : CalcMathWith1PAfter, AddRuleTri, AddRuleAfterBaseMath, AddRuleAfterModArc, AddRuleAfterRoot {
+    object ArcCtg : TrigonometryWithRules {
         override val buttonText = "arcctg"
         override val expressionText = buttonText
         override val order = 4
@@ -370,19 +411,28 @@ object Math {
         }
     }
 
-    object LeftParenthesis : CalcMath, AddRuleAfterFirst, AddRuleFirst, AddRuleAfterRoot, AddRuleAfterBaseMath {
+    object LeftParenthesis : CalcMath {
         override val buttonText = "("
         override val expressionText = buttonText
         override val key2 = Key.NumPadLeftParenthesis
         override val order = 5
+
+        override val ruleItems: Set<Int>
+            get() = setOf(first)
+        override val rulesAfter: Set<Int>
+            get() = setOf(first, root, baseMath, tri)
     }
 
-    object RightParenthesis : CalcMath, AddRuleAfterNumber, AddRuleAfterConst, AddRuleRightParenthesis,
-        AddRuleAfterRightParenthesis {
+    object RightParenthesis : CalcMath {
         override val buttonText = ")"
         override val expressionText = buttonText
         override val key2 = Key.NumPadRightParenthesis
         override val order = 5
+
+        override val ruleItems: Set<Int>
+            get() = setOf(rightParenthesis)
+        override val rulesAfter: Set<Int>
+            get() = setOf(number, constant, rightParenthesis)
     }
 }
 
@@ -405,22 +455,36 @@ object Extra {
     }
 
     // Модификатор в дробное число
-    object Decimal : CalcAction, AddRuleAfterFirst, AddRuleDot, AddRuleAfterNumber, AddRuleAfterRoot,
-        AddRuleAfterBaseMath {
+    object Decimal : CalcAction {
         override val buttonText: String = "."
         override val key: Key = Key.NumPadDot
         override val key2: Key = Key.Period
+
+        override val ruleItems: Set<Int>
+            get() = setOf(dot)
+        override val rulesAfter: Set<Int>
+            get() = setOf(first, number, root, baseMath, tri)
     }
 
-    object Square : CalcAction, AddRuleAfterNumber {
+    object Square : CalcAction {
         override val buttonText = "^2"
         override val expressionText = "$buttonText "
         override val key = Key.Q
+
+        override val ruleItems: Set<Int>
+            get() = setOf()
+        override val rulesAfter: Set<Int>
+            get() = setOf(number)
     }
 
-    object Arc : CalcAction, AddRuleModArc, AddRuleAfterFirst, AddRuleAfterRoot, AddRuleAfterBaseMath {
+    object Arc : CalcAction {
         override val buttonText = "arc"
         override val expressionText = buttonText
+
+        override val ruleItems: Set<Int>
+            get() = setOf(arc)
+        override val rulesAfter: Set<Int>
+            get() = setOf(first, baseMath)
     }
 }
 

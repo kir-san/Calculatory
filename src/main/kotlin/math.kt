@@ -38,7 +38,6 @@ fun List<CalcAction>.calculate(): List<CalcAction> {
     }
 
     while (tempList.size > 1) {
-
         // 1 находим первое с самых высоким приоритетом
         val filterIsInstance = tempList.filterIsInstance<CalcMath>()
         val maxOrder =
@@ -63,7 +62,17 @@ fun List<CalcAction>.calculate(): List<CalcAction> {
 
             // Если найдена правая скобка, то разделить список в этом месте и левую часть решить отдельно
             is Math.RightParenthesis -> {
-                tempList = tempList.subList(0, actionIndex).calculate().toMutableList()
+                println("----------------")
+                println("actionIndex is $actionIndex")
+                println("size is ${tempList.size}")
+                val leftPart = tempList.subList(0, actionIndex)
+                println("leftPart is $leftPart")
+                val rightPart = tempList.subList(actionIndex + 1, tempList.size)
+                println("rightPart is $rightPart")
+                val calculate = leftPart.calculate()
+                println("calculate is $calculate")
+                println("----------------")
+                return calculate + rightPart
             }
 
             is CalcMathWith2PSimple -> {
@@ -71,6 +80,7 @@ fun List<CalcAction>.calculate(): List<CalcAction> {
                 // для простых операций
                 if (prevAction is CalcNumber && nextAction is CalcNumber)
                     action.simpleCalculate(actionIndex, prevAction, nextAction)
+                else break
             }
             // для сложных операций
             is CalcMathWith2PAdvance -> {
@@ -104,7 +114,7 @@ fun List<CalcAction>.calculate(): List<CalcAction> {
                         tempList.removeAt(actionIndex + 2)
                         action.simpleCalculate(actionIndex, newNumber)
                     }
-                }
+                } else break
             }
             else -> break
         }
