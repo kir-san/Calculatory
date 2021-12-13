@@ -1,25 +1,29 @@
 // Правила добавления элементов
 
+// Деление всех элементов калькулятора
+// на группы с которыми работают правила
+// 
 // может быть первым
 const val first = 1
-//  после  .
+// .
 const val dot = 2
-// после цифр
+// цифры
 const val number = 3
-//  после тригонометрии
+// тригонометрические операции
 const val tri = 4
-// после Арк
+// модификатор Арк
 const val arc = 5
-// После корня
+// корень
 const val root = 6
-// После констант
+// константы
 const val constant = 7
-// После основных базовых операций
+// арифметические операции
 const val baseMath = 8
-// После основных базовых операций
+// закрывающая правия скобка
 const val rightParenthesis = 9
 
-
+// Подготовленные шаблоны для операций которые имеют повторения
+// Шаблон с правилами для цифр
 interface NumberWithRules : CalcNumber {
     override val ruleItems: Set<Int>
         get() = setOf(number)
@@ -27,6 +31,7 @@ interface NumberWithRules : CalcNumber {
         get() = setOf(first, dot, tri, baseMath, root, number)
 }
 
+// Шаблон с правилами для констант
 interface ConstNumberWithRules : CalcNumber {
     override val ruleItems: Set<Int>
         get() = setOf(constant)
@@ -34,14 +39,16 @@ interface ConstNumberWithRules : CalcNumber {
         get() = setOf(first, tri, baseMath, root)
 }
 
-interface BaseMathWithRules : CalcMathWith2PSimple {
+// Шаблон с правилами для арфметических операций
+interface BaseMathWithRules : CalcMathWith2P {
     override val ruleItems: Set<Int>
         get() = setOf(baseMath)
     override val rulesAfter: Set<Int>
         get() = setOf(number, constant, rightParenthesis)
 }
 
-interface TrigonometryWithRules : CalcMathWith1PAfter {
+// Шаблон с правилами для тригонометрических операций
+interface TrigonometryWithRules : CalcMathWith1P {
     override val ruleItems: Set<Int>
         get() = setOf(tri)
     override val rulesAfter: Set<Int>

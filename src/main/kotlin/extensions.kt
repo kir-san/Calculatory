@@ -3,6 +3,7 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.type
 
+// обработка нажатий на кнопки на клавиатуре
 fun KeyEvent.onPressKey(action: (CalcAction) -> Unit): Boolean {
     if (KeyEventType.KeyDown == type) {
         val result = Constants.calcButtons.filter { a ->
@@ -18,6 +19,7 @@ fun KeyEvent.onPressKey(action: (CalcAction) -> Unit): Boolean {
     return false
 }
 
+// обработка действий
 fun MutableList<CalcAction>.addAction(action: CalcAction) {
     when {
         // первым элементом может быть лишь ограниченное кол-во действий
@@ -33,9 +35,8 @@ fun MutableList<CalcAction>.addAction(action: CalcAction) {
                 addAction(Numbers.TWO)
         }
         // Преобразование корней
-        (action is Math.Sqrt && last() is CalcNumber) -> {
-            add(Math.Root)
-        }
+        (action is Math.Sqrt && last() is CalcNumber) -> add(Math.Root)
+
 
         // действия с модификатором Арк
         last().ruleItems.contains(arc) && action.rulesAfter.contains(arc) -> {
@@ -53,6 +54,7 @@ fun MutableList<CalcAction>.addAction(action: CalcAction) {
     }
 }
 
+// преобразование списка действий в строку
 fun List<CalcAction>.buildString(): String {
     var result = ""
     if (isNotEmpty())
@@ -60,7 +62,7 @@ fun List<CalcAction>.buildString(): String {
     return result.ifEmpty { "0" }
 }
 
-// Преобразование подряд идущих Number в одно
+// Преобразование подряд идущих цифр в соответстующее число
 fun List<CalcAction>.transformNumbers(): List<CalcAction> {
     val newList = mutableListOf<CalcAction>()
     val zeroList = mutableListOf<CalcAction>()
@@ -91,8 +93,8 @@ fun List<CalcAction>.transformNumbers(): List<CalcAction> {
             else -> { // на все остальные действия
                 // если временная строка не пустая
                 if (newNumber.isNotEmpty()) {
-                    // Если была точка, то это FLOAT, Иначе LONG
-                    newList += newNumber.createNumber(isDecimal, false)
+
+                    newList += newNumber.createNumber(false)
 
                     isDecimal = false
                     newNumber = ""
@@ -104,12 +106,13 @@ fun List<CalcAction>.transformNumbers(): List<CalcAction> {
         }
     }
     if (newNumber.isNotEmpty()) {
-        newList += newNumber.createNumber(isDecimal, isLastZero)
+        newList += newNumber.createNumber(isLastZero)
     }
     return newList
 }
 
-private fun String.createNumber(isDecimal: Boolean, hasLastZero: Boolean): CalcNumber {
+// преобразование строки в число
+private fun String.createNumber(hasLastZero: Boolean): CalcNumber {
     return try {
         if (hasLastZero) {
             calcNumber(toFloat(), text = this)
@@ -122,14 +125,13 @@ private fun String.createNumber(isDecimal: Boolean, hasLastZero: Boolean): CalcN
     }
 }
 
+
 inline fun CalcNumber.getResult(
     hasPi: Boolean = false,
     number: CalcNumber = Numbers.ZERO,
     action: (n1: Float, n2: Float) -> Float
 ): CalcNumber {
     val floatResult = action(value, number.value)
-    val longResult = floatResult.toLong()
-
     return calcNumber(floatResult, hasPi)
 }
 

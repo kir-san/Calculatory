@@ -6,25 +6,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.*
 
+// Основные предопределенные значения
 object Constants {
+    // Размеры кнопоу
     val buttonHeight = 50.dp
     val buttonWidth = 80.dp
 
+    // Размеры областей окна
     val historyWidth = 250.dp
-    val aboutWidth = 390.dp
+    val aboutHeight = 40.dp
 
+    // Смещения для элементов
     val buttonPadding = 1.dp
     val mainPadding = 3.dp
     val bigTextVertPad = 9.dp
     val smallTextVerPad = 4.dp
 
+    // Цвета элементов
     val windowColor = Color(0xFF272727)
     val textColor = Color.White
     val btnColor = Color.Black
 
+    // Размеры текстовых полей
     val resultTextSize = 40.sp
     val expressionTextSize = 17.sp
 
+    // Значение отображаемое в выражениях если ничего не введено
     const val defaultValue = "0"
 
     // Макет расположения кнопок
@@ -41,17 +48,25 @@ object Constants {
 //        arc     ^   .   0   =   +
         Extra.Arc, Math.Pow, Extra.Decimal, Numbers.ZERO, Extra.Equals, Math.Plus
     )
+    // Размеры сетки
     const val buttonCols = 6
     private const val buttonRows = 5
+
+    // Вычисляемые размеры
+    // высота текстовых полей
     private val textSize = 108.dp + bigTextVertPad * 2 + smallTextVerPad * 2
 
+    // Ширина калькулятора
     val calcWidth = buttonWidth * buttonCols + buttonPadding * (buttonCols - 1) + mainPadding * 4
-    private val width = calcWidth + historyWidth + aboutWidth
-    private val height = buttonHeight * buttonRows + buttonPadding * (buttonRows - 1) + textSize + mainPadding * 4
 
+    // Размеры окна приложения
+    private val width = calcWidth + historyWidth
+    private val height =
+        buttonHeight * buttonRows + buttonPadding * (buttonRows - 1) + textSize + mainPadding * 4 + aboutHeight
     val windowSize = DpSize(width = width, height = height)
 }
 
+// Предопределенные значения для цифр и констант
 @OptIn(ExperimentalComposeUiApi::class)
 object Numbers {
     object ZERO : NumberWithRules {
@@ -129,6 +144,7 @@ object Numbers {
     }
 }
 
+// Предопределенные значения для математических операций
 @OptIn(ExperimentalComposeUiApi::class)
 object Math {
     object Div : BaseMathWithRules {
@@ -162,7 +178,7 @@ object Math {
         }
     }
 
-    object Minus : CalcMathWith2PSimple {
+    object Minus : CalcMathWith2P {
         override val buttonText = "-"
         override val expressionText = " $buttonText "
         override val key = Key.Minus
@@ -205,7 +221,7 @@ object Math {
         }
     }
 
-    object Root : CalcMathWith2PAdvance {
+    object Root : CalcMathWith2P {
         override val buttonText = "y√x"
         override val expressionText = "√"
         override val key = Key.R
@@ -231,7 +247,7 @@ object Math {
         }
     }
 
-    object Sqrt : CalcMathWith1PAfter {
+    object Sqrt : CalcMathWith1P {
         override val buttonText = "√x"
         override val expressionText = "√"
         override val key = Key.S
@@ -436,18 +452,22 @@ object Math {
     }
 }
 
+// Предопределенные значения для дополнительных операций
 @OptIn(ExperimentalComposeUiApi::class)
 object Extra {
+    // полная очистка введеного выражения
     object Clean : CalcAction {
         override val buttonText: String = "C"
         override val key: Key = Key.Delete
     }
 
+    // удаление последнего значения в выражении
     object RemoveLast : CalcAction {
         override val buttonText: String = "<-"
         override val key: Key = Key.Backspace
     }
 
+    // перенос текущих действий в журнал
     object Equals : CalcAction {
         override val buttonText: String = "="
         override val key: Key = Key.Enter
@@ -466,6 +486,7 @@ object Extra {
             get() = setOf(first, number, root, baseMath, tri)
     }
 
+    // Возведение в квадрат
     object Square : CalcAction {
         override val buttonText = "^2"
         override val expressionText = "$buttonText "
@@ -477,6 +498,7 @@ object Extra {
             get() = setOf(number)
     }
 
+    // модификатор в обратные тригонометрические функции
     object Arc : CalcAction {
         override val buttonText = "arc"
         override val expressionText = buttonText
@@ -488,6 +510,7 @@ object Extra {
     }
 }
 
+// Предопределенные значения для ошибок
 object Errors {
     object DivideZero : CalcNumber, CalcError {
         override val value = 0f

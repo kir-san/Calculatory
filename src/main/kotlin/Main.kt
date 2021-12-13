@@ -16,8 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.HorizontalAlignmentLine
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,25 +26,30 @@ import androidx.compose.ui.window.rememberWindowState
 @OptIn(ExperimentalFoundationApi::class)
 fun main() = application {
     val state = rememberWindowState(size = Constants.windowSize)
+    // список введенных действий
     val enteredActions = remember<SnapshotStateList<CalcAction>> { mutableStateListOf() }
+    // веденные действия с преобразованием цифр
     val enteredExpression = enteredActions.transformNumbers()
+    // текст отображаемый в поле ввывода
     val calculationResult = enteredExpression.calculate().buildString()
+    // текст отображаемый в поле ввода
     val enteredText = enteredExpression.buildString()
-
+    // хранение данных для журнала
     val history = remember<SnapshotStateList<Pair<String, String>>> { mutableStateListOf() }
 
+    // вспомогательная функция обработки ввода данных
     fun addAction(action: CalcAction) {
+        // Сохранения результата при нажатии на кнопку "="
         if (action is Extra.Equals) {
             if (calculationResult != Constants.defaultValue || enteredText != Constants.defaultValue)
-                history.add(
-                    calculationResult to enteredText
-                )
+                history.add(calculationResult to enteredText)
             enteredActions.addAction(Extra.Clean)
         } else {
             enteredActions.addAction(action)
         }
     }
 
+    // Окно приложения
     Window(
         state = state,
         title = "Calculator",
@@ -67,7 +70,7 @@ fun main() = application {
                         .padding(Constants.mainPadding)
                         .width(Constants.calcWidth)
                 ) {
-                    Text(
+                    Text( // поле вывода информации
                         modifier = Modifier.fillMaxWidth().padding(vertical = Constants.bigTextVertPad),
                         maxLines = 1,
                         fontSize = Constants.resultTextSize,
@@ -75,7 +78,7 @@ fun main() = application {
                         text = calculationResult,
                         color = Constants.textColor
                     )
-                    Text(
+                    Text( // поле ввода информации
                         modifier = Modifier.fillMaxWidth().padding(vertical = Constants.smallTextVerPad),
                         maxLines = 1,
                         fontSize = Constants.expressionTextSize,
@@ -84,6 +87,7 @@ fun main() = application {
                         color = Constants.textColor
                     )
 
+                    // Сетка из кнопок
                     LazyVerticalGrid(
                         cells = GridCells.Fixed(Constants.buttonCols),
                     ) {
@@ -106,6 +110,13 @@ fun main() = application {
                             }
                         }
                     }
+
+                    Text(
+                        text = "Автор приложения Деревяновский К.В.",
+                        modifier = Modifier.fillMaxWidth().padding(Constants.aboutHeight / 2 - 8.dp),
+                        textAlign = TextAlign.Center,
+                        color = Constants.textColor
+                    )
                 }
 
                 // Журнал действий
@@ -116,12 +127,12 @@ fun main() = application {
                         .padding(7.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
+                    Text( // Заголовок
                         "Журнал",
                         fontSize = 20.sp,
                         color = Constants.textColor
                     )
-                    LazyColumn(
+                    LazyColumn( // список
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         items(history) { (calc, enter) ->
@@ -142,36 +153,6 @@ fun main() = application {
                             }
                         }
                     }
-                }
-
-                Column(
-                    modifier = Modifier.width(Constants.aboutWidth)
-                        .height(Constants.windowSize.height)
-                        .padding(7.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        "О приложении",
-                        fontSize = 20.sp,
-                        color = Constants.textColor
-                    )
-
-                    Text(
-                        "Это приложение-калькулятор написал Деревяновский К.В. студент группы 4ИС для предмета " +
-                                "\"Стандартизация и унификация информационных технологий\". " +
-                                "В калькуляторе поддерживаются основные математические функции и операции." +
-                                "Вычисление результата происходит по мере ввода и в порядке выполнения математических операций. " +
-                                "У каждого действия определены правила по которым они могут быть внесены в выражение, " +
-                                "поэтому не допустимые не вносятся и не как не отображаются на экране. " +
-                                "Например 3 + 5 - допустимое, а 3 + ^ 6 - не допустимое и такое выражение не возможно внести. " +
-                                "По умолчанию угол в тригонометрических функциях считается в градусах, при " +
-                                "использовании числа пи - в радианах." +
-                                "Кнопка \"=\" запоминает результат в журнал. " +
-                                "Большинство операций поддерживают горячие клавиши.",
-                        fontSize = 14.sp,
-                        color = Constants.textColor,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
                 }
             }
         }
