@@ -31,7 +31,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Msi)
             packageName = "Calculator"
-            packageVersion = "1.0.0"
+            packageVersion = "1.0.1"
         }
     }
 }
